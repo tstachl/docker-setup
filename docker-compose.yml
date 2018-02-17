@@ -1,0 +1,14 @@
+version: '2'
+services:
+
+  logspout:
+    image: gliderlabs/logspout
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock'
+    command: syslog+tls://${PAPERTRAIL_URL}
+    restart: always
+
+  web:
+    image: nginx:alpine
+    ports:
+      - '8080:80'
