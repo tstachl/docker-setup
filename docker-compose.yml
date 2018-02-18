@@ -16,8 +16,6 @@ services:
     volumes:
       - www:/var/www/html
       - tmp:/tmp
-      - ./nginx:/etc/nginx:ro
-      
     ports:
       - '80:80'
       - '443:443'
