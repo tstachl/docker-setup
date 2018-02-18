@@ -5,29 +5,50 @@ services:
     image: gliderlabs/logspout
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock'
-    command: syslog+tls://${PAPERTRAIL_URL}
+    command: "syslog+tls://${PAPERTRAIL_URL}"
     restart: always
 
-  certbot:
-    image: pierreprinetti/certbot
-    volumes:
-      - certbot:/etc/letsencrypt
-    environment:
-      - HTTP_PROXY=${HTTP_PROXY}
-      - DOMAINS=${DOMAINS}
-      - EMAIL=${ADMIN_EMAIL}
-    ports:
-      - '80:80'
-      - '443:443'
-
-  web:
+  nginx:
     image: nginx:alpine
+    depends_on:
+      - wordpress
     ports:
       - '80:80'
       - '443:443'
+    restart: always
+    
+  memcached:
+    image: memcached/alpine
+    restart: always
+  
+  mysql:
+    image: yobasystems/alpine-mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
-      - certbot:/etc/nginx/certs:ro
+      - mysql:/var/lib/mysql
+    restart: always
+    
+  wordpress:
+    image: wordpress/fpm-alpine
+    expose:
+      - 9000
+    depends_on:
+      - mysql
+      - memcached
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
+      WORDPRESS_DB_USER: ${MYSQL_USER}
+      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - www:/var/www/html
     restart: always
 
 volumes:
   certbot:
+  www:
+  mysql:

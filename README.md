@@ -9,3 +9,13 @@
 ## Composer Setup
 ## Composer Run
 ## Cleanup
+
+
+## Composition
+* logspout
+* nginx
+<!--* letsencrypt-->
+* memcached
+* mariadb
+* php-fpm
+* wordpress
