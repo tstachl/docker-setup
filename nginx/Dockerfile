@@ -1,25 +1,47 @@
 FROM nginx:alpine
 
 # Install the NGINX Amplify Agent
-RUN apt-get update \
-    && apt-get install -qqy curl python apt-transport-https apt-utils gnupg1 procps \
-    && echo 'deb https://packages.amplify.nginx.com/debian/ stretch amplify-agent' > /etc/apt/sources.list.d/nginx-amplify.list \
-    && curl -fs https://nginx.org/keys/nginx_signing.key | apt-key add - > /dev/null 2>&1 \
-    && apt-get update \
-    && apt-get install -qqy nginx-amplify-agent \
-    && apt-get purge -qqy curl apt-transport-https apt-utils gnupg1 \
-    && rm -rf /var/lib/apt/lists/*
-
-# Keep the nginx logs inside the container
-RUN unlink /var/log/nginx/access.log \
-    && unlink /var/log/nginx/error.log \
-    && touch /var/log/nginx/access.log \
-    && touch /var/log/nginx/error.log \
-    && chown nginx /var/log/nginx/*log \
-    && chmod 644 /var/log/nginx/*log
-
-# Copy nginx stub_status config
-COPY ./conf.d/stub_status.conf /etc/nginx/conf.d
+RUN apk update && \
+    apk upgrade && \
+    apk add --no-cache \
+        ca-certificates \
+        wget \
+        python \
+        python-dev \
+        py-configobj \
+        git \
+        util-linux \
+        procps \
+        gcc \
+        musl-dev \
+        linux-headers && \
+        wget -q --no-check-certificate https://bootstrap.pypa.io/get-pip.py && \
+            python get-pip.py --ignore-installed --user && \
+            ~/.local/bin/pip install setuptools --upgrade --user && \
+            rm -rf nginx-amplify-agent && \
+            git clone "https://github.com/nginxinc/nginx-amplify-agent" && \
+            cd nginx-amplify-agent && \
+            ~/.local/bin/pip install --upgrade \
+                --target=amplify --no-compile \
+                -r packages/requirements && \
+            python setup.py install && \
+            cp nginx-amplify-agent.py /usr/bin && \
+            mkdir -p /var/log/amplify-agent && \
+            chmod 755 /var/log/amplify-agent && \
+            mkdir -p /var/run/amplify-agent && \
+            chmod 755 /var/run/amplify-agent && \
+            rm -rf ~/.local && \
+            apk del \
+                ca-certificates \
+                wget \
+                python-dev \
+                py-configobj \
+                git \
+                gcc \
+                musl-dev \
+                linux-headers &&\
+                rm -rf /var/cache/apk/* &&\
+                mkdir -p /etc/amplify-agent
 
 # API_KEY is required for configuring the NGINX Amplify Agent.
 # It could be your real API key for NGINX Amplify here if you wanted
@@ -43,10 +65,14 @@ COPY ./conf.d/stub_status.conf /etc/nginx/conf.d
 # The script honors API_KEY and AMPLIFY_IMAGENAME environment
 # variables, and updates /etc/amplify-agent/agent.conf accordingly.
 
-COPY ./entrypoint.sh /entrypoint.sh
+COPY entrypoint.sh /entrypoint.sh
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY stub_status.conf /etc/nginx/conf.d/stub_status.conf
 COPY nginx.vh.default.conf /etc/nginx/conf.d/default.conf
+COPY agent.conf /etc/amplify-agent/agent.conf
+
+RUN chmod +x /entrypoint.sh; \
+    chmod +r /proc;
 
 EXPOSE 80
 EXPOSE 443

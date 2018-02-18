@@ -9,7 +9,7 @@ services:
     restart: always
 
   nginx:
-    image: nginx:alpine
+    build: ./nginx
     depends_on:
       - wordpress
       - logspout
