@@ -46,7 +46,7 @@ services:
       - 9000
     depends_on:
       - mysql
-      - memcached
+      - redis
     environment:
       WORDPRESS_DB_HOST: mysql:3306
       WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
