@@ -55,6 +55,7 @@ services:
     volumes:
       - www:/var/www/html
       - tmp:/tmp
+      - ./php/www.conf:/etc/php/7.2/fpm/pool.d/www.conf:ro
     restart: always
 
 volumes:
