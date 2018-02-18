@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 services:
 
   logspout:
@@ -8,7 +8,26 @@ services:
     command: syslog+tls://${PAPERTRAIL_URL}
     restart: always
 
+  certbot:
+    image: pierreprinetti/certbot
+    volumes:
+      - certbot:/etc/letsencrypt
+    environment:
+      - HTTP_PROXY=${HTTP_PROXY}
+      - DOMAINS=${DOMAINS}
+      - EMAIL=${ADMIN_EMAIL}
+    ports:
+      - '80:80'
+      - '443:443'
+
   web:
     image: nginx:alpine
     ports:
-      - '8080:80'
+      - '80:80'
+      - '443:443'
+    volumes:
+      - certbot:/etc/nginx/certs:ro
+    restart: always
+
+volumes:
+  certbot:
