@@ -1,4 +1,4 @@
 FROM nginx:alpine
 
-RUN addgroup --gid 3000 --system www-data
-RUN adduser --uid 3000 --system --disabled-login --disabled-password --gid 3000 www-data
+RUN addgroup -g 3000 -S www-data
+RUN adduser -u 3000 -S -D -G www-data www-data
