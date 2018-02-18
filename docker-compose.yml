@@ -40,12 +40,13 @@ services:
     restart: always
     
   wordpress:
-    image: wordpress:fpm-alpine
+    build: ./wordpress
     expose:
       - 9000
     depends_on:
       - mysql
       - redis
+      - logspout
     environment:
       WORDPRESS_DB_HOST: mysql:3306
       WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
@@ -54,7 +55,6 @@ services:
     volumes:
       - www:/var/www/html
       - tmp:/tmp
-      - ./php/www.conf:/usr/local/etc/php-fpm.d/www.conf:ro
     restart: always
 
 volumes:
