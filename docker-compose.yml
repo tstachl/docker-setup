@@ -18,7 +18,7 @@ services:
     restart: always
     
   memcached:
-    image: memcached/alpine
+    image: memcached:alpine
     restart: always
   
   mysql:
@@ -33,7 +33,7 @@ services:
     restart: always
     
   wordpress:
-    image: wordpress/fpm-alpine
+    image: wordpress:fpm-alpine
     expose:
       - 9000
     depends_on:
