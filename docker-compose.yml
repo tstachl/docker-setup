@@ -12,14 +12,20 @@ services:
     image: nginx:alpine
     depends_on:
       - wordpress
+      - logspout
+    volumes:
+      - www:/var/www/html
+      - tmp:/tmp
     ports:
       - '80:80'
       - '443:443'
     restart: always
     
-  memcached:
-    image: memcached:alpine
+  redis:
+    image: redis:alpine
     restart: always
+    depends_on:
+      - logspout
   
   mysql:
     image: yobasystems/alpine-mariadb
@@ -46,6 +52,7 @@ services:
       WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
       - www:/var/www/html
+      - tmp:/tmp
     restart: always
 
 volumes:
