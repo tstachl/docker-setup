@@ -1,9 +1,16 @@
 FROM alpine
 
 # install dependencies
-RUN apk add --no-cache \
-		mysql-client \
-		duplicity
+RUN apk add --update --no-cache \
+    python \
+    python-dev \
+    py-pip \
+    build-base \
+    mysql-client \
+    duplicity \
+  && pip install gdata \
+    fasteners \
+    PyDrive
 
 RUN addgroup -g 3000 -S www-data
 RUN adduser -u 3000 -S -D -G www-data www-data
@@ -14,7 +21,6 @@ RUN set -ex; \
 WORKDIR /var/www/html
 VOLUME /var/www/html
 
-COPY docker-entrypoint.sh /usr/local/bin/
 COPY backup /usr/local/bin
 COPY restore /usr/local/bin
 
