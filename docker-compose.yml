@@ -60,16 +60,20 @@ services:
     command: 'true'
   
   certbot:
-    image: pierreprinetti/certbot
+    image: xataz/letsencrypt
     volumes:
       - certs:/etc/letsencrypt
     ports:
       - '80:80'
       - '443:443'
-    command: 'true'
 
-#   -e domains="example.com,example.org" \
-#   -e email="me@example.com" \
+# docker run -it --rm \
+# 	xataz/letsencrypt \
+# 		certonly --standalone \
+# 		--agree-tos \
+# 		-m me@myorg.org \
+# 		-d www.myorg.org \
+# 		-d blog.myorg.org
 
 volumes:
   www:
