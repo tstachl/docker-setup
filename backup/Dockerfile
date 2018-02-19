@@ -2,15 +2,8 @@ FROM alpine
 
 # install dependencies
 RUN apk add --update --no-cache \
-    python \
-    python-dev \
-    py-pip \
-    build-base \
     mysql-client \
-    duplicity \
-  && pip install gdata \
-    fasteners \
-    PyDrive
+    duplicity
 
 RUN addgroup -g 3000 -S www-data
 RUN adduser -u 3000 -S -D -G www-data www-data
