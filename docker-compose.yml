@@ -57,7 +57,21 @@ services:
       WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
       - www:/var/www/html
-    restart: "no"
+    command: ':'
+  
+#   certbot:
+#     image: pierreprinetti/certbot
+    
+    
+
+# docker run \
+#   -v nginx-certs:/etc/letsencrypt \
+#   -e http_proxy=$http_proxy \
+#   -e domains="example.com,example.org" \
+#   -e email="me@example.com" \
+#   -p 80:80 \
+#   -p 443:443 \
+#   --rm pierreprinetti/certbot:latest
 
 volumes:
   www:
