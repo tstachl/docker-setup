@@ -59,19 +59,17 @@ services:
       - www:/var/www/html
     command: 'true'
   
-#   certbot:
-#     image: pierreprinetti/certbot
-    
-    
+  certbot:
+    image: pierreprinetti/certbot
+    volumes:
+      certs:/etc/letsencrypt
+    ports:
+      - '80:80'
+      - '443:443'
+    command: 'true'
 
-# docker run \
-#   -v nginx-certs:/etc/letsencrypt \
-#   -e http_proxy=$http_proxy \
 #   -e domains="example.com,example.org" \
 #   -e email="me@example.com" \
-#   -p 80:80 \
-#   -p 443:443 \
-#   --rm pierreprinetti/certbot:latest
 
 volumes:
   www:
