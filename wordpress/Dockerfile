@@ -1,16 +1,6 @@
 FROM wordpress:fpm-alpine
 
-RUN set -ex; \
-  \
-  apk add --no-cache --virtual .build-deps \
-    build-base \
-    autoconf \
-  ; \
-  \
-  yes '' | pecl install -f redis \
-  \
-  apk del .build-deps
-
 RUN { \
-    echo 'extension=redis.so'; \
-  } > /usr/local/etc/php/conf.d/docker-php-ext-redis.ini
+    echo 'post_max_size=128M'; \
+    echo 'upload_max_filesize=128M'; \
+  } > /usr/local/etc/php/conf.d/docker-php-upload.ini
