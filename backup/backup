@@ -2,5 +2,5 @@
 # create a database backup dir in /var/www/html
 mkdir -p db-backup
 # connect to mysql and dump database
-mysqldump -u ${DB_USER} -p${DB_PASSWORD} ${DB_NAME} | gzip -9 > db-backup/${DB_NAME}.sql.gz
+mysqldump -h ${DB_HOST} -u ${DB_USER} -p${DB_PASSWORD} ${DB_NAME} | gzip -9 > db-backup/${DB_NAME}.sql.gz
 duplicity ./ ${TARGET_URL}

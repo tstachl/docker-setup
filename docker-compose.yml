@@ -69,7 +69,7 @@ services:
       DB_NAME: ${MYSQL_DATABASE}
       DB_USER: ${MYSQL_USER}
       DB_PASSWORD: ${MYSQL_PASSWORD}
-      TARGET_URL: dpbx:///
+      TARGET_URL: dpbx:///backup
       DPBX_ACCESS_TOKEN: ${DPBX_ACCESS_TOKEN}
     volumes:
       - www:/var/www/html

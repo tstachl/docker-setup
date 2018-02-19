@@ -2,8 +2,13 @@ FROM alpine
 
 # install dependencies
 RUN apk add --update --no-cache \
+    python \
+    python-dev \
+    py-pip \
+    build-base \
     mysql-client \
-    duplicity
+    duplicity \
+  && pip install dropbox
 
 RUN addgroup -g 3000 -S www-data
 RUN adduser -u 3000 -S -D -G www-data www-data
