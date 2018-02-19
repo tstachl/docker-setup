@@ -18,10 +18,6 @@ services:
       - '80:80'
       - '443:443'
     restart: always
-    
-  redis:
-    image: redis:alpine
-    restart: always
   
   mysql:
     image: yobasystems/alpine-mariadb
@@ -35,15 +31,11 @@ services:
     restart: always
     
   wordpress:
-    build: ./wordpress
     image: wordpress:fpm-alpine
     expose:
       - 9000
     depends_on:
       - mysql
-      - redis
-    links:
-      - redis
     environment:
       WORDPRESS_DB_HOST: mysql:3306
       WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
