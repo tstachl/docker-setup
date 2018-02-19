@@ -1,12 +1,12 @@
 version: '3'
 services:
 
-  # logspout:
-  #   image: gliderlabs/logspout
-  #   volumes:
-  #     - '/var/run/docker.sock:/var/run/docker.sock'
-  #   command: "syslog+tls://${PAPERTRAIL_URL}"
-  #   restart: always
+  logspout:
+    image: gliderlabs/logspout
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock'
+    command: "syslog+tls://${PAPERTRAIL_URL}"
+    restart: always
 
   nginx:
     build: ./nginx
@@ -18,11 +18,9 @@ services:
       - '443:443'
     restart: always
     
-  # redis:
-  #   image: redis:alpine
-  #   restart: always
-  #   depends_on:
-  #     - logspout
+  redis:
+    image: redis:alpine
+    restart: always
   
   mysql:
     image: yobasystems/alpine-mariadb
