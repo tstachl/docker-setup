@@ -13,6 +13,7 @@ services:
     image: nginx:alpine
     volumes:
       - www:/var/www/html
+      - certs:/etc/letsencrypt
     ports:
       - '80:80'
       - '443:443'
