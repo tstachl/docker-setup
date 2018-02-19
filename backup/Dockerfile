@@ -5,6 +5,9 @@ RUN apk add --no-cache \
 		mysql-client \
 		duplicity
 
+RUN addgroup -g 3000 -S www-data
+RUN adduser -u 3000 -S -D -G www-data www-data
+
 RUN set -ex; \
 	mkdir -p /var/www/html; \
 	chown -R www-data:www-data /var/www/html
@@ -15,6 +18,5 @@ COPY docker-entrypoint.sh /usr/local/bin/
 COPY backup /usr/local/bin
 COPY restore /usr/local/bin
 
-ENTRYPOINT ["docker-entrypoint.sh"]
 USER www-data
 CMD ["backup"]
