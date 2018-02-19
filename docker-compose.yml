@@ -66,19 +66,6 @@ services:
     ports:
       - '80:80'
       - '443:443'
-    command: true
-
-# docker run -it --rm \
-# 	xataz/letsencrypt \
-# 		certonly --standalone \
-# 		--agree-tos \
-# 		-m me@myorg.org \
-# 		-d www.myorg.org \
-# 		-d blog.myorg.org
-
-# docker run -it --rm -v ~/certs:/etc/letsencrypt -p 80:80 -p 443:443 xataz/letsencrypt certonly --standalone --agree-tos -m thomas@stachl.me -d alpenx.org --dry-run
-
-# certonly --standalone --agree-tos -m thomas@stachl.me -d alpinex.org
 
 volumes:
   www:
