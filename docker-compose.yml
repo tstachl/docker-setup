@@ -63,7 +63,6 @@ services:
     image: xataz/letsencrypt
     volumes:
       - certs:/etc/letsencrypt
-    command: 'true'
 
 volumes:
   www:
