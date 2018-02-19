@@ -7,7 +7,7 @@ RUN set -ex; \
     autoconf \
   ; \
   \
-  yes '' | pecl install -f apc \
+  yes '' | pecl install -f redis \
   \
   apk del .build-deps
 
