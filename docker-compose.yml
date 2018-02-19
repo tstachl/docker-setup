@@ -62,7 +62,7 @@ services:
   certbot:
     image: pierreprinetti/certbot
     volumes:
-      certs:/etc/letsencrypt
+      - certs:/etc/letsencrypt
     ports:
       - '80:80'
       - '443:443'
