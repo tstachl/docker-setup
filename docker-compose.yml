@@ -63,9 +63,6 @@ services:
     image: xataz/letsencrypt
     volumes:
       - certs:/etc/letsencrypt
-    ports:
-      - '80:80'
-      - '443:443'
     command: 'true'
 
 volumes:
