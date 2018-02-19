@@ -57,7 +57,7 @@ services:
       WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
       - www:/var/www/html
-    command: ':'
+    command: 'true'
   
 #   certbot:
 #     image: pierreprinetti/certbot
