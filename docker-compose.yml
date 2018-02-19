@@ -52,9 +52,6 @@ services:
 
   wp:
     image: wordpress:cli
-    depends_on:
-      - mysql
-      - wordpress
     environment:
       WORDPRESS_DB_HOST: mysql:3306
       WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
