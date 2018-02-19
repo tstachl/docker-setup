@@ -61,6 +61,18 @@ services:
     image: xataz/letsencrypt
     volumes:
       - certs:/etc/letsencrypt
+  
+  backup:
+    build: ./backup
+    environment:
+      DB_HOST: mysql
+      DB_NAME: ${MYSQL_DATABASE}
+      DB_USER: ${MYSQL_USER}
+      DB_PASSWORD: ${MYSQL_PASSWORD}
+      TARGET_URL: dpbx:///
+      DPBX_ACCESS_TOKEN: ${DPBX_ACCESS_TOKEN}
+    volumes:
+      www:/var/www/html
 
 volumes:
   www:
