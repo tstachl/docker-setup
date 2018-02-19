@@ -64,6 +64,7 @@ services:
   
   backup:
     build: ./backup
+    image: alpine
     environment:
       DB_HOST: mysql
       DB_NAME: ${MYSQL_DATABASE}
