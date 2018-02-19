@@ -72,7 +72,7 @@ services:
       TARGET_URL: dpbx:///
       DPBX_ACCESS_TOKEN: ${DPBX_ACCESS_TOKEN}
     volumes:
-      www:/var/www/html
+      - www:/var/www/html
 
 volumes:
   www:
