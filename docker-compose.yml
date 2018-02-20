@@ -62,14 +62,16 @@ services:
     volumes:
       - certs:/etc/letsencrypt
   
-  duplicity:
-    image: wernight/duplicity
-    environment:
-      PASSPHRASE=${PASSPHRASE}
+  restic:
+    restart: always
+    image: jsmitsnl/docker-restic:latest
     volumes:
-      - www:/var/www/html
-      - ~/.cache:/home/duplicity/.cache/duplicity
-      - ~/.gnupg:/home/duplicity/.gnupg
+      - www:/data
+    environment:
+      - RESTIC_REPOSITORY=${RESTIC_REPOSITORY}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - RESTIC_PASSWORD=${RESTIC_PASSWORD}
 
 volumes:
   www:
