@@ -1,5 +1,7 @@
 # Commands to Run this thing
 
+
+
 ## Certbot
 
 Certbot needs to run before `docker-compose up` so the port binding doesn't
@@ -51,4 +53,39 @@ This installs all the default plugins to the multisite network.
       rocket-lazy-load \
       wp-optimize \
       --activate-network
+```
+
+## Cron Job
+
+```sh
+  docker-compose run --rm \
+    wp sh -c \
+      "wp db export --add-drop-table - | gzip -c > wp-content/database.sql.gz"
+```
+
+## Restic
+
+Initial respository setup.
+
+```sh
+  docker-compose run --rm \
+    restic \
+      restic init
+```
+
+Listing snapshots.
+
+```sh
+  docker-compose run --rm \
+    restic \
+      restic snapshots
+```
+
+Restoring a snapshot.
+
+```sh
+  docker-compose run --rm \
+    restic \
+      restic restore {SNAPSHOT_ID} \
+        --target /
 ```
