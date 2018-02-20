@@ -62,18 +62,14 @@ services:
     volumes:
       - certs:/etc/letsencrypt
   
-  backup:
-    build: ./backup
-    image: alpine
+  duplicity:
+    image: wernight/duplicity
     environment:
-      DB_HOST: mysql
-      DB_NAME: ${MYSQL_DATABASE}
-      DB_USER: ${MYSQL_USER}
-      DB_PASSWORD: ${MYSQL_PASSWORD}
-      TARGET_URL: dpbx:///backup
-      DPBX_ACCESS_TOKEN: ${DPBX_ACCESS_TOKEN}
+      PASSPHRASE=${PASSPHRASE}
     volumes:
       - www:/var/www/html
+      - ~/.cache:/home/duplicity/.cache/duplicity
+      - ~/.gnupg:/home/duplicity/.gnupg
 
 volumes:
   www:
