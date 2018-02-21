@@ -13,6 +13,7 @@ services:
     volumes:
       - www:/var/www/html
       - certs:/etc/letsencrypt
+      - nginx:/etc/nginx/conf.d
     ports:
       - '80:80'
       - '443:443'
@@ -77,3 +78,4 @@ volumes:
   www:
   mysql:
   certs:
+  nginx:
