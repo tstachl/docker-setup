@@ -51,6 +51,7 @@ This installs all the default plugins to the multisite network.
       rocket-lazy-load \
       wp-optimize \
       wordpress-mu-domain-mapping \
+      nginx-helper \
       --activate-network
 ```
 
@@ -150,3 +151,5 @@ wp plugin install
 
 crontab -e
 0 3 * * * (cd /home/user/compose; /usr/local/bin/docker-compose run --rm wp sh -c "wp db export --add-drop-table - | gzip -c > wp-content/database.sql.gz")
+
+wp db import wp-content/backup.sql
