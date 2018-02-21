@@ -6,19 +6,19 @@ upstream php {
 map $http_host $blogid {
   default       1;
   #Ref: http://wordpress.org/extend/plugins/nginx-helper/
-  include /var/www/wordpress/wp-content/plugins/nginx-helper/map.conf ;
+  include /var/www/wordpress/wp-content/plugins/nginx-helper/map.conf;
 }
 
 server {
-	listen 80;
-	listen [::]:80;
-	server_name _;
-	return 301 https://$host$request_uri;
+  listen 80;
+  listen [::]:80;
+  server_name _;
+  return 301 https://$host$request_uri;
 }
 
 server {
-	listen 443 ssl http2;
-	listen [::]:443 ssl http2 ipv6only=on;
+  listen 443 ssl http2;
+  listen [::]:443 ssl http2 ipv6only=on;
   
   set $domain %DOMAIN%;
   set $server_name %SERVER_NAME%;
@@ -26,12 +26,12 @@ server {
   root /var/www/html;
   index index.php;
   server_name $server_name;
-
+  
   ssl on;
   
-	ssl_certificate /etc/letsencrypt/live/$domain/fullchain.pem;
-	ssl_certificate_key /etc/letsencrypt/live/$domain/privkey.pem;
-	ssl_trusted_certificate /etc/letsencrypt/live/$domain/fullchain.pem;
+  ssl_certificate /etc/letsencrypt/live/$domain/fullchain.pem;
+  ssl_certificate_key /etc/letsencrypt/live/$domain/privkey.pem;
+  ssl_trusted_certificate /etc/letsencrypt/live/$domain/fullchain.pem;
   ssl_session_timeout 1d;
   ssl_session_cache shared:SSL:50m;
   ssl_session_tickets off;
