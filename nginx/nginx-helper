@@ -9,8 +9,7 @@ ARGUMENTS:
     -d  domain to use
     -s  site name(s)"
 
-#nginx_path=/etc/nginx/conf.d
-nginx_path="."
+nginx_path=/etc/nginx/conf.d
 
 if [ -z "$1" ]; then
   echo "$usage"
