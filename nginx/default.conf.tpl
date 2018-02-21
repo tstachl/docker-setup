@@ -4,31 +4,34 @@ upstream php {
 }
 
 map $http_host $blogid {
-  default       -999;
+  default       1;
   #Ref: http://wordpress.org/extend/plugins/nginx-helper/
-  #include /var/www/wordpress/wp-content/plugins/nginx-helper/map.conf ;
+  include /var/www/wordpress/wp-content/plugins/nginx-helper/map.conf ;
 }
 
 server {
-  listen 80;
-  listen [::]:80;
-  server_name alpenx.org *.alpenx.org; 
-  return 301 https://alpenx.org$request_uri;
+	listen 80;
+	listen [::]:80;
+	server_name _;
+	return 301 https://$host$request_uri;
 }
 
 server {
-	listen 443 ssl http2 default_server;
-	listen [::]:443 ssl http2 default_server ipv6only=on;
+	listen 443 ssl http2;
+	listen [::]:443 ssl http2 ipv6only=on;
+  
+  set $domain %DOMAIN%;
+  set $server_name %SERVER_NAME%;
   
   root /var/www/html;
   index index.php;
-  server_name alpenx.org *.alpenx.org;
+  server_name $server_name;
 
   ssl on;
   
-	ssl_certificate /etc/letsencrypt/live/alpenx.org/fullchain.pem;
-	ssl_certificate_key /etc/letsencrypt/live/alpenx.org/privkey.pem;
-	ssl_trusted_certificate /etc/letsencrypt/live/alpenx.org/fullchain.pem;
+	ssl_certificate /etc/letsencrypt/live/$domain/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/$domain/privkey.pem;
+	ssl_trusted_certificate /etc/letsencrypt/live/$domain/fullchain.pem;
   ssl_session_timeout 1d;
   ssl_session_cache shared:SSL:50m;
   ssl_session_tickets off;
@@ -54,43 +57,43 @@ server {
   gzip_vary on;
   
   client_max_body_size 128m;
-
+  
   # CACHE ENABLER
   set $cache_uri $request_uri;
-
+  
   # POST requests and urls with a query string should always go to PHP
   if ($request_method = POST) {
     set $cache_uri 'nullcache';
   }
-
+  
   if ($query_string != "") {
     set $cache_uri 'nullcache';
   }
-
+  
   # Don't cache uris containing the following segments
   if ($request_uri ~* "(/wp-admin/|/xmlrpc.php|/wp-(app|cron|login|register|mail).php|wp-.*.php|/feed/|index.php|wp-comments-popup.php|wp-links-opml.php|wp-locations.php|sitemap(_index)?.xml|[a-z0-9_-]+-sitemap([0-9]+)?.xml)") {
     set $cache_uri 'nullcache';
   }
-
+  
   # Don't use the cache for logged in users or recent commenters
   if ($http_cookie ~* "comment_author|wordpress_[a-f0-9]+|wp-postpass|wordpress_logged_in") {
     set $cache_uri 'nullcache';
   }
-
+  
   # custom sub directory e.g. /blog
   set $custom_subdir '';
-
+  
   # default html file
   set $cache_enabler_uri '${custom_subdir}/wp-content/cache/cache-enabler/${http_host}${cache_uri}index.html';
-
+  
   # webp html file
   if ($http_accept ~* "image/webp") {
     set $cache_enabler_uri '${custom_subdir}/wp-content/cache/cache-enabler/${http_host}${cache_uri}index-webp.html';
   }
-
+  
   location / {
     gzip_static on;
-    try_files /wp-content/w3tc-$host/pgcache/$cache_uri/_index.html $uri $uri/ /index.php?$args;
+    try_files $cache_enabler_uri $uri $uri/ $custom_subdir/index.php?$args;
   }
 
   location ~ \.php$ {

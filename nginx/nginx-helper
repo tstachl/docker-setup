@@ -1,0 +1,62 @@
+#!/bin/sh
+usage="$(basename "$0") <command> [-d s] [-s s] [-h] -- enable and disable sites
+
+COMMANDS:
+  enable    Enables a site, requires both options to be set.
+  disable   Disables a site, requires -d to be set.
+
+ARGUMENTS:
+    -d  domain to use
+    -s  site name(s)"
+
+#nginx_path=/etc/nginx/conf.d
+nginx_path="."
+
+if [ -z "$1" ]; then
+  echo "$usage"
+  exit
+fi
+
+while getopts ':h:s:d:' option; do
+  case "$option" in
+    h) echo "$usage"
+       exit
+       ;;
+    s) server_name=$OPTARG
+       ;;
+    d) domain=$OPTARG
+       ;;
+    :) echo "$usage" >&2
+       exit 1
+       ;;
+   \?) printf "illegal option: -%s\n" "$OPTARG" >&2
+       echo "$usage" >&2
+       exit 1
+       ;;
+  esac
+done
+shift $((OPTIND - 1))
+
+if [ $1 = 'enable' ]; then
+  if [ -z "$domain" ]; then
+    echo "$usage"
+    exit
+  fi
+  
+  if [ -z "$server_name" ]; then
+    echo "$usage"
+    exit
+  fi
+  
+  sed -e "s;%DOMAIN%;$domain;g" -e "s;%SERVER_NAME%;$server_name;g" \
+    "$nginx_path/default.conf.tpl" > "$nginx_path/$domain.conf"
+fi
+
+if [ $1 = 'disable' ] ; then
+  if [ -z "$domain" ] ; then
+    echo "$usage"
+    exit
+  fi
+
+  rm "$nginx_path/$domain.conf"
+fi
