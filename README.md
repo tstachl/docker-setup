@@ -22,3 +22,4 @@
 * mariadb
 * php-fpm
 * wordpress
+* test
