@@ -14,9 +14,9 @@ services:
       - www:/var/www/html
       - certs:/etc/letsencrypt
       - nginx:/etc/nginx/conf.d
+      - run:/var/run
     ports:
-      - '80:80'
-      - '443:443'
+      - '9999:80'
     restart: always
 
   certbot:
@@ -49,6 +49,7 @@ services:
       WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
       - www:/var/www/html
+      - run:/var/run
     restart: always
 
   wp:
@@ -79,3 +80,4 @@ volumes:
   mysql:
   certs:
   nginx:
+  run:
